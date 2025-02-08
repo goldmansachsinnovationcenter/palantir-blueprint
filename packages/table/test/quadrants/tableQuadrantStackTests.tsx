@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { render } from "@testing-library/react";
 import { expect } from "chai";
 import { mount } from "enzyme";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import * as TestUtils from "react-dom/test-utils";
 import sinon from "sinon";
 
@@ -125,7 +125,7 @@ describe("TableQuadrantStack", () => {
             width: GRID_WIDTH,
         };
 
-        const { container } = renderIntoDom(
+        const { container } = render(
             <div style={containerStyle}>
                 <TableQuadrantStack grid={grid} bodyRenderer={sinon.stub().returns(<div style={bodyStyle} />)} />
             </div>,
@@ -165,7 +165,7 @@ describe("TableQuadrantStack", () => {
             width: GRID_WIDTH,
         };
 
-        const { container } = renderIntoDom(
+        const { container } = render(
             <div style={containerStyle}>
                 <TableQuadrantStack grid={grid} bodyRenderer={sinon.stub().returns(<div style={bodyStyle} />)} />
             </div>,
@@ -432,7 +432,7 @@ describe("TableQuadrantStack", () => {
                 return <div ref={refHandler} style={{ height: COLUMN_HEADER_HEIGHT, width: "100%" }} />;
             };
 
-            const { container } = renderIntoDom(
+            const { container } = render(
                 <TableQuadrantStack
                     grid={grid}
                     numFrozenColumns={numFrozenColumns}
@@ -459,7 +459,7 @@ describe("TableQuadrantStack", () => {
                 return <div ref={refHandler} style={{ height: COLUMN_HEADER_HEIGHT, width: "100%" }} />;
             };
 
-            const { container } = renderIntoDom(
+            const { container } = render(
                 <TableQuadrantStack
                     grid={grid}
                     enableRowHeader={false}
@@ -537,7 +537,7 @@ describe("TableQuadrantStack", () => {
              * Testing scrolling when throttling and debouncing are enabled is a
              * huge pain, so disable both.
              */
-            const result = renderIntoDom(
+            const result = render(
                 <div style={{ height: CONTAINER_HEIGHT, width: CONTAINER_WIDTH }}>
                     <TableQuadrantStack
                         grid={grid}
@@ -559,9 +559,6 @@ describe("TableQuadrantStack", () => {
         });
 
         afterEach(() => {
-            // TODO(React 18): Replace deprecated ReactDOM methods. See: https://github.com/palantir/blueprint/issues/7167
-            // eslint-disable-next-line deprecation/deprecation
-            ReactDOM.unmountComponentAtNode(container);
             onScroll.resetHistory();
         });
 
@@ -712,18 +709,6 @@ describe("TableQuadrantStack", () => {
             topLeftQuadrant: element.querySelector<HTMLElement>(`.${Classes.TABLE_QUADRANT_TOP_LEFT}`)!,
         };
         /* eslint-enable sort-keys */
-    }
-
-    function renderIntoDom(element: React.JSX.Element) {
-        const containerElement = document.createElement("div");
-        document.body.appendChild(containerElement);
-        // TODO(React 18): Replace deprecated ReactDOM methods. See: https://github.com/palantir/blueprint/issues/7167
-        // eslint-disable-next-line deprecation/deprecation
-        const component = ReactDOM.render<any>(element, containerElement);
-        return {
-            component: component as TableQuadrantStack,
-            container: containerElement,
-        };
     }
 
     function renderGridBody() {

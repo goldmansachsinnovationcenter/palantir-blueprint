@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { render } from "@testing-library/react";
 import { expect } from "chai";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 
 import { Utils } from "../src";
 import { Grid } from "../src/common/grid";
@@ -53,11 +53,7 @@ describe("Locator", () => {
 
         // mount in the DOM to let us test scrolling behavior.
         // ".body" will be the scrollable region.
-        containerElement = document.createElement("div");
-        document.body.appendChild(containerElement);
-        // TODO(React 18): Replace deprecated ReactDOM methods. See: https://github.com/palantir/blueprint/issues/7167
-        // eslint-disable-next-line deprecation/deprecation
-        ReactDOM.render(
+        const { container } = render(
             <div className="table-wrapper" style={style}>
                 <div className="body" style={style}>
                     <div className="body-client" style={style}>
@@ -65,21 +61,15 @@ describe("Locator", () => {
                     </div>
                 </div>
             </div>,
-            containerElement,
         );
+        containerElement = container;
 
         locator = new LocatorImpl(
-            containerElement.querySelector<HTMLElement>(".table-wrapper")!,
-            containerElement.querySelector<HTMLElement>(".body")!,
-            containerElement.querySelector<HTMLElement>(".body-client")!,
+            container.querySelector<HTMLElement>(".table-wrapper")!,
+            container.querySelector<HTMLElement>(".body")!,
+            container.querySelector<HTMLElement>(".body-client")!,
         );
         locator.setGrid(grid);
-    });
-
-    afterEach(() => {
-        // TODO(React 18): Replace deprecated ReactDOM methods. See: https://github.com/palantir/blueprint/issues/7167
-        // eslint-disable-next-line deprecation/deprecation
-        ReactDOM.unmountComponentAtNode(containerElement);
     });
 
     it("constructs", () => {

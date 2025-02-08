@@ -47,3 +47,4 @@ import "./tableBody2Tests";
 import "./tableBodyTests";
 import "./tableTests";
 import "./utilsTests";
+import "./resizeRowsTests";
