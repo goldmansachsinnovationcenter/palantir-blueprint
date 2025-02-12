@@ -2,12 +2,9 @@
  * (c) Copyright 2024 Palantir Technologies Inc. All rights reserved.
  */
 
+import { Sandpack } from "@codesandbox/sandpack-react";
 import classNames from "classnames";
 import * as React from "react";
-
-import { Pre } from "@blueprintjs/core";
-
-import { DOCS_CODE_BLOCK } from "../common/classes";
 
 export interface CodeExampleProps {
     children?: React.ReactNode;
@@ -16,16 +13,24 @@ export interface CodeExampleProps {
     id: string;
 }
 
+const app = `import { Button } from "@blueprintjs/core";
+import "@blueprintjs/core/lib/css/blueprint.css";
+
+export default function App() {
+    return <Button intent="primary">Hello Sandpack</Button>;
+}`;
+
+const dependencies = {
+    "@blueprintjs/core": "^5.16.1",
+};
+
 export const CodeExample: React.FC<CodeExampleProps> = props => {
     const { children, className, code, id, ...rest } = props;
     const classes = classNames("docs-code-example-frame", className);
 
     return (
         <div className={classes} data-example-id={id} {...rest}>
-            <div className="docs-code-example">{children}</div>
-            <Pre className={DOCS_CODE_BLOCK} data-lang="typescript">
-                {code}
-            </Pre>
+            <Sandpack template="react-ts" files={{ "/App.tsx": app }} customSetup={{ dependencies }} />;
         </div>
     );
 };
