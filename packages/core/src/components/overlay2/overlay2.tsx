@@ -125,10 +125,10 @@ export const Overlay2 = React.forwardRef<OverlayInstance, Overlay2Props>((props,
     /** Ref for backdrop element */
     const backdropElement = React.useRef<HTMLDivElement>(null);
 
-    /* An empty, keyboard-focusable div at the beginning of the Overlay content */
+    /** An empty, keyboard-focusable div at the beginning of the Overlay content */
     const startFocusTrapElement = React.useRef<HTMLDivElement>(null);
 
-    /* An empty, keyboard-focusable div at the end of the Overlay content */
+    /** An empty, keyboard-focusable div at the end of the Overlay content */
     const endFocusTrapElement = React.useRef<HTMLDivElement>(null);
 
     /**
@@ -408,7 +408,6 @@ export const Overlay2 = React.forwardRef<OverlayInstance, Overlay2Props>((props,
                 // IMPORTANT: only inject our ref if the user didn't specify childRef or childRefs already. Otherwise,
                 // we risk clobbering the user's ref (which we cannot inspect here while cloning/decorating the child).
                 ref: userChildRef === undefined ? localChildRef : undefined,
-                tabIndex: enforceFocus || autoFocus ? 0 : undefined,
             });
             const resolvedChildRef = userChildRef ?? localChildRef;
 
@@ -431,8 +430,6 @@ export const Overlay2 = React.forwardRef<OverlayInstance, Overlay2Props>((props,
             );
         },
         [
-            autoFocus,
-            enforceFocus,
             getUserChildRef,
             handleTransitionAddEnd,
             handleTransitionExited,
@@ -457,7 +454,7 @@ export const Overlay2 = React.forwardRef<OverlayInstance, Overlay2Props>((props,
         [backdropProps, bringFocusInsideOverlay, canOutsideClickClose, enforceFocus, onClose],
     );
 
-    const renderDummyElement = React.useCallback(
+    const renderFocusTrap = React.useCallback(
         (key: string, dummyElementProps: HTMLDivProps & { ref?: React.Ref<HTMLDivElement> }) => (
             <CSSTransition
                 addEndListener={handleTransitionAddEnd}
@@ -480,7 +477,7 @@ export const Overlay2 = React.forwardRef<OverlayInstance, Overlay2Props>((props,
      * Overlay.
      */
     const handleStartFocusTrapElementFocus = React.useCallback(
-        (e: React.FocusEvent<HTMLDivElement>) => {
+        (e: React.FocusEvent<HTMLDivElement, Element>) => {
             if (!enforceFocus || isAutoFocusing) {
                 return;
             }
@@ -490,11 +487,7 @@ export const Overlay2 = React.forwardRef<OverlayInstance, Overlay2Props>((props,
             // element in this transition group.
             const container = getRef(containerElement);
             const endFocusTrap = getRef(endFocusTrapElement);
-            if (
-                e.relatedTarget != null &&
-                container?.contains(e.relatedTarget as Element) &&
-                e.relatedTarget !== endFocusTrap
-            ) {
+            if (e.relatedTarget != null && container?.contains(e.relatedTarget) && e.relatedTarget !== endFocusTrap) {
                 endFocusTrap?.focus({ preventScroll: true });
             }
         },
@@ -528,7 +521,7 @@ export const Overlay2 = React.forwardRef<OverlayInstance, Overlay2Props>((props,
      * Overlay.
      */
     const handleEndFocusTrapElementFocus = React.useCallback(
-        (e: React.FocusEvent<HTMLDivElement>) => {
+        (e: React.FocusEvent<HTMLDivElement, Element>) => {
             // No need for this.props.enforceFocus check here because this element is only rendered
             // when that prop is true.
             // During user interactions, e.relatedTarget will be defined, and we should wrap around to the
@@ -538,7 +531,7 @@ export const Overlay2 = React.forwardRef<OverlayInstance, Overlay2Props>((props,
             const startFocusTrap = getRef(startFocusTrapElement);
             if (
                 e.relatedTarget != null &&
-                getRef(containerElement)?.contains(e.relatedTarget as Element) &&
+                getRef(containerElement)?.contains(e.relatedTarget) &&
                 e.relatedTarget !== startFocusTrap
             ) {
                 const firstFocusableElement = getKeyboardFocusableElements(containerElement).shift();
@@ -607,7 +600,7 @@ export const Overlay2 = React.forwardRef<OverlayInstance, Overlay2Props>((props,
     }
     if (isOpen && (autoFocus || enforceFocus) && childrenWithTransitions.length > 0) {
         childrenWithTransitions.unshift(
-            renderDummyElement("__start", {
+            renderFocusTrap("__start", {
                 className: Classes.OVERLAY_START_FOCUS_TRAP,
                 onFocus: handleStartFocusTrapElementFocus,
                 onKeyDown: handleStartFocusTrapElementKeyDown,
@@ -616,7 +609,7 @@ export const Overlay2 = React.forwardRef<OverlayInstance, Overlay2Props>((props,
         );
         if (enforceFocus) {
             childrenWithTransitions.push(
-                renderDummyElement("__end", {
+                renderFocusTrap("__end", {
                     className: Classes.OVERLAY_END_FOCUS_TRAP,
                     onFocus: handleEndFocusTrapElementFocus,
                     ref: endFocusTrapElement,
