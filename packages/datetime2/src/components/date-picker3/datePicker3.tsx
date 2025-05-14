@@ -48,7 +48,7 @@ export type { DatePicker3Props };
  * @see https://blueprintjs.com/docs/#datetime2/date-picker3
  */
 export class DatePicker3 extends DateFnsLocalizedComponent<DatePicker3Props, DatePicker3State> {
-    public static defaultProps: DatePicker3Props = {
+    public static defaultProps = {
         canClearSelection: true,
         clearButtonText: "Clear",
         dayPickerProps: {},
@@ -60,7 +60,7 @@ export class DatePicker3 extends DateFnsLocalizedComponent<DatePicker3Props, Dat
         shortcuts: false,
         showActionsBar: false,
         todayButtonText: "Today",
-    };
+    } satisfies DatePicker3Props;
 
     public static displayName = `${DISPLAYNAME_PREFIX}.DatePicker3`;
 
