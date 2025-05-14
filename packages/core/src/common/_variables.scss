@@ -24,6 +24,8 @@ $bp-ns: $ns;
 // (so other variables can use it to define themselves)
 $pt-grid-size: 10px !default;
 
+$pt-spacing: calc($pt-grid-size / 2) !default;
+
 // Icon variables
 
 $icons16-family: "blueprint-icons-16" !default;

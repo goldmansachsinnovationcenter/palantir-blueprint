@@ -34,6 +34,9 @@
 @page text
 @page tree
 
+@## Layout
+@page box
+
 @## Form controls
 
 @page form-group
