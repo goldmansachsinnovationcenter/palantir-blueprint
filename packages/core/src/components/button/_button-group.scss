@@ -44,6 +44,9 @@ Styleguide button-group
 .#{$ns}-button-group {
   display: inline-flex;
 
+  // fresh stacking context for z-indexes applied below
+  z-index: 0;
+
   .#{$ns}-button {
     // ensure button can never be smaller than its default size
     flex: 0 0 auto;
