@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { assert } from "chai";
-import { mount, shallow } from "enzyme";
 import * as React from "react";
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import userEvent from "@testing-library/user-event";
 import { spy } from "sinon";
 
 import { FolderClose } from "@blueprintjs/icons";
@@ -25,36 +26,51 @@ import { Breadcrumb, Classes, Icon } from "../../src";
 
 describe("Breadcrumb", () => {
     it("renders its contents", () => {
-        const wrapper = shallow(<Breadcrumb className="foo" text="Hello" />);
-        assert.isTrue(wrapper.hasClass(Classes.BREADCRUMB));
-        assert.isTrue(wrapper.hasClass("foo"));
-        assert.strictEqual(wrapper.text(), "Hello");
+        render(<Breadcrumb className="foo" text="Hello" />);
+        
+        const breadcrumbElement = screen.getByText("Hello");
+        expect(breadcrumbElement).toBeInTheDocument();
+        expect(breadcrumbElement.closest(`.${Classes.BREADCRUMB}`)).toHaveClass("foo");
+        expect(breadcrumbElement).toHaveTextContent("Hello");
     });
 
-    it("clicking triggers onClick", () => {
+    it("clicking triggers onClick", async () => {
         const onClick = spy();
-        shallow(<Breadcrumb onClick={onClick} text="Hello" />).simulate("click");
-        assert.isTrue(onClick.calledOnce, "onClick not called once");
+        render(<Breadcrumb onClick={onClick} text="Hello" />);
+        
+        const user = userEvent.setup();
+        await user.click(screen.getByText("Hello"));
+        
+        expect(onClick.calledOnce).toBe(true);
     });
 
-    it("clicking disabled does not trigger onClick", () => {
+    it("clicking disabled does not trigger onClick", async () => {
         const onClick = spy();
-        shallow(<Breadcrumb disabled={true} onClick={onClick} text="Hello" />).simulate("click");
-        assert.isTrue(onClick.notCalled, "onClick called");
+        render(<Breadcrumb disabled={true} onClick={onClick} text="Hello" />);
+        
+        const user = userEvent.setup();
+        await user.click(screen.getByText("Hello"));
+        
+        expect(onClick.notCalled).toBe(true);
     });
 
     it("renders an a tag if it's clickable", () => {
-        assert.lengthOf(shallow(<Breadcrumb href="test" />).find("a"), 1);
-        assert.lengthOf(shallow(<Breadcrumb href="test" />).find("span"), 0);
+        render(<Breadcrumb href="test" />);
+        expect(document.querySelector("a")).toBeInTheDocument();
+        expect(document.querySelector("span")).not.toBeInTheDocument();
     });
 
     it("renders a span tag if it's not clickable", () => {
-        assert.lengthOf(shallow(<Breadcrumb />).find("a"), 0);
-        assert.lengthOf(shallow(<Breadcrumb />).find("span"), 1);
+        render(<Breadcrumb />);
+        expect(document.querySelector("a")).not.toBeInTheDocument();
+        expect(document.querySelector("span")).toBeInTheDocument();
     });
 
     it("renders an icon if one is provided", () => {
-        assert.lengthOf(mount(<Breadcrumb />).find(Icon), 0);
-        assert.lengthOf(mount(<Breadcrumb icon={<FolderClose />} />).find(FolderClose), 1);
+        const { rerender } = render(<Breadcrumb />);
+        expect(document.querySelector(`.${Classes.ICON}`)).not.toBeInTheDocument();
+        
+        rerender(<Breadcrumb icon={<FolderClose />} />);
+        expect(document.querySelector(`.${Classes.ICON}`)).toBeInTheDocument();
     });
 });
