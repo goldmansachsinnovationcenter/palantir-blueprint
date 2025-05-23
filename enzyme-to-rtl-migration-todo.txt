@@ -4,7 +4,7 @@
 - [x] packages/core/test/non-ideal-state/nonIdealStateTests.tsx
 - [x] packages/core/test/breadcrumbs/breadcrumbTests.tsx
 - [x] packages/core/test/breadcrumbs/breadcrumbsTests.tsx
-- [ ] packages/core/test/control-card/controlCardTests.tsx
+- [x] packages/core/test/control-card/controlCardTests.tsx
 - [ ] packages/core/test/toast/overlayToasterTests.tsx
 - [ ] packages/core/test/overlay2/overlay2Tests.tsx
 - [ ] packages/core/test/tree/treeTests.tsx

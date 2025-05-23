@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-import { assert } from "chai";
-import { type EnzymePropSelector, mount, type ReactWrapper } from "enzyme";
 import * as React from "react";
-import { type SinonSpy, spy } from "sinon";
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import userEvent from "@testing-library/user-event";
+import { spy } from "sinon";
 
 import { CheckboxCard, Classes, RadioCard, RadioGroup, SwitchCard } from "../../src";
 
 describe("ControlCard", () => {
-    let testsContainerElement: HTMLElement | undefined;
+    let testsContainerElement: HTMLElement;
 
     beforeEach(() => {
         testsContainerElement = document.createElement("div");
@@ -34,47 +35,58 @@ describe("ControlCard", () => {
     });
 
     describe("SwitchCard", () => {
-        const handleControlChangeSpy = spy() as SinonSpy<[React.FormEvent<HTMLInputElement>], void>;
+        const handleControlChangeSpy = spy();
 
         beforeEach(() => {
             handleControlChangeSpy.resetHistory();
         });
 
-        it("clicking on label element toggles switch state", () => {
-            const wrapper = mount(<SwitchCard defaultChecked={false} onChange={handleControlChangeSpy} />, {
-                attachTo: testsContainerElement,
+        it("clicking on label element toggles switch state", async () => {
+            render(<SwitchCard defaultChecked={false} onChange={handleControlChangeSpy} />, {
+                container: testsContainerElement,
             });
-            wrapper.find("input").simulate("change");
-            assert.isTrue(handleControlChangeSpy.calledOnce, "expected onChange to be called");
+            
+            const switchInput = testsContainerElement.querySelector("input");
+            expect(switchInput).toBeInTheDocument();
+            
+            const user = userEvent.setup();
+            await user.click(switchInput!);
+            
+            expect(handleControlChangeSpy.calledOnce).toBe(true);
         });
     });
 
     describe("CheckboxCard", () => {
         it("is left-aligned by default", () => {
-            const wrapper = mount(<CheckboxCard />, { attachTo: testsContainerElement });
-            assert.isTrue(
-                wrapper.find(`.${Classes.CONTROL}.${Classes.ALIGN_LEFT}`).exists(),
-                "expected left alignment",
-            );
+            render(<CheckboxCard />, { container: testsContainerElement });
+            
+            const controlElement = testsContainerElement.querySelector(`.${Classes.CONTROL}.${Classes.ALIGN_LEFT}`);
+            expect(controlElement).toBeInTheDocument();
         });
     });
 
     describe("RadioCard", () => {
-        it("works like a Radio component inside a RadioGroup", () => {
+        it("works like a Radio component inside a RadioGroup", async () => {
             const changeSpy = spy();
-            const group = mount(
+            render(
                 <RadioGroup onChange={changeSpy}>
                     <RadioCard value="one" label="One" />
                     <RadioCard value="two" label="Two" />
                 </RadioGroup>,
+                { container: testsContainerElement }
             );
-            findInput(group, { value: "one" }).simulate("change");
-            findInput(group, { value: "two" }).simulate("change");
-            assert.equal(changeSpy.callCount, 2);
+            
+            const inputOne = testsContainerElement.querySelector('input[value="one"]');
+            const inputTwo = testsContainerElement.querySelector('input[value="two"]');
+            
+            expect(inputOne).toBeInTheDocument();
+            expect(inputTwo).toBeInTheDocument();
+            
+            const user = userEvent.setup();
+            await user.click(inputOne!);
+            await user.click(inputTwo!);
+            
+            expect(changeSpy.callCount).toBe(2);
         });
     });
-
-    function findInput(wrapper: ReactWrapper<any, any>, props: EnzymePropSelector) {
-        return wrapper.find("input").filter(props);
-    }
 });
