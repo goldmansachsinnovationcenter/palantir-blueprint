@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { assert } from "chai";
-import { mount } from "enzyme";
 import * as React from "react";
+import { render, screen, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import userEvent from "@testing-library/user-event";
 import * as ReactDOM from "react-dom";
 import sinon, { spy } from "sinon";
 
@@ -85,26 +86,19 @@ describe("OverlayToaster", () => {
             });
 
             it("does not attach toast container to body on script load", () => {
-                assert.lengthOf(
-                    document.getElementsByClassName(Classes.TOAST_CONTAINER),
-                    0,
-                    "unexpected toast container",
-                );
+                expect(document.getElementsByClassName(Classes.TOAST_CONTAINER).length).toBe(0);
             });
 
-            it("show() renders toast on next tick", done => {
+            it("show() renders toast on next tick", async () => {
                 toaster.show({
                     message: "Hello world",
                 });
-                assert.lengthOf(toaster.getToasts(), 1, "expected 1 toast");
+                expect(toaster.getToasts().length).toBe(1);
 
                 // setState needs a tick to flush DOM updates
-                setTimeout(() => {
-                    assert.isNotNull(
-                        document.querySelector(`.${Classes.TOAST_CONTAINER}.${Classes.OVERLAY_OPEN}`),
-                        "expected toast container element to have 'overlay open' class name",
-                    );
-                    done();
+                await waitFor(() => {
+                    const toastContainer = document.querySelector(`.${Classes.TOAST_CONTAINER}.${Classes.OVERLAY_OPEN}`);
+                    expect(toastContainer).toBeInTheDocument();
                 });
             });
 
@@ -112,15 +106,15 @@ describe("OverlayToaster", () => {
                 toaster.show({ message: "one" });
                 toaster.show({ message: "two" });
                 toaster.show({ message: "six" });
-                assert.lengthOf(toaster.getToasts(), 3, "expected 3 toasts");
+                expect(toaster.getToasts().length).toBe(3);
             });
 
             it("show() updates existing toast", () => {
                 const key = toaster.show({ message: "one" });
-                assert.deepEqual(toaster.getToasts()[0].message, "one");
+                expect(toaster.getToasts()[0].message).toBe("one");
                 toaster.show({ message: "two" }, key);
-                assert.lengthOf(toaster.getToasts(), 1, "expected 1 toast");
-                assert.deepEqual(toaster.getToasts()[0].message, "two");
+                expect(toaster.getToasts().length).toBe(1);
+                expect(toaster.getToasts()[0].message).toBe("two");
             });
 
             it("dismiss() removes just the toast in question", () => {
@@ -128,59 +122,66 @@ describe("OverlayToaster", () => {
                 const key = toaster.show({ message: "two" });
                 toaster.show({ message: "six" });
                 toaster.dismiss(key);
-                assert.deepEqual(
-                    toaster.getToasts().map(t => t.message),
-                    ["six", "one"],
-                );
+                expect(toaster.getToasts().map(t => t.message)).toEqual(["six", "one"]);
             });
 
             it("clear() removes all toasts", () => {
                 toaster.show({ message: "one" });
                 toaster.show({ message: "two" });
                 toaster.show({ message: "six" });
-                assert.lengthOf(toaster.getToasts(), 3, "expected 3 toasts");
+                expect(toaster.getToasts().length).toBe(3);
                 toaster.clear();
-                assert.lengthOf(toaster.getToasts(), 0, "expected 0 toasts");
+                expect(toaster.getToasts().length).toBe(0);
             });
 
-            it("action onClick callback invoked when action clicked", () => {
+            it("action onClick callback invoked when action clicked", async () => {
                 const onClick = spy();
                 toaster.show({
                     action: { onClick, text: "action" },
                     message: "message",
                     timeout: 0,
                 });
+                
                 // action is first descendant button
                 const action = document.querySelector<HTMLElement>(`.${Classes.TOAST} .${Classes.BUTTON}`);
-                action?.click();
-                assert.isTrue(onClick.calledOnce, "expected onClick to be called once");
+                expect(action).toBeInTheDocument();
+                
+                const user = userEvent.setup();
+                await user.click(action!);
+                
+                expect(onClick.calledOnce).toBe(true);
             });
 
-            it("onDismiss callback invoked when close button clicked", () => {
+            it("onDismiss callback invoked when close button clicked", async () => {
                 const handleDismiss = spy();
                 toaster.show({
                     message: "dismiss",
                     onDismiss: handleDismiss,
                     timeout: 0,
                 });
+                
                 // without action, dismiss is first descendant button
                 const dismiss = document.querySelector<HTMLElement>(`.${Classes.TOAST} .${Classes.BUTTON}`);
-                dismiss?.click();
-                assert.isTrue(handleDismiss.calledOnce);
+                expect(dismiss).toBeInTheDocument();
+                
+                const user = userEvent.setup();
+                await user.click(dismiss!);
+                
+                expect(handleDismiss.calledOnce).toBe(true);
             });
 
             it("onDismiss callback invoked on toaster.dismiss()", () => {
                 const onDismiss = spy();
                 const key = toaster.show({ message: "dismiss me", onDismiss });
                 toaster.dismiss(key);
-                assert.isTrue(onDismiss.calledOnce, "onDismiss not called");
+                expect(onDismiss.calledOnce).toBe(true);
             });
 
             it("onDismiss callback invoked on toaster.clear()", () => {
                 const onDismiss = spy();
                 toaster.show({ message: "dismiss me", onDismiss });
                 toaster.clear();
-                assert.isTrue(onDismiss.calledOnce, "onDismiss not called");
+                expect(onDismiss.calledOnce).toBe(true);
             });
 
             it("reusing props object does not produce React errors", () => {
@@ -192,7 +193,7 @@ describe("OverlayToaster", () => {
                     const toast = { message: "repeat" };
                     toaster.show(toast);
                     toaster.show(toast);
-                    assert.isFalse(errorSpy.calledWithMatch("two children with the same key"), "mutation side effect!");
+                    expect(errorSpy.calledWithMatch("two children with the same key")).toBe(false);
                 } finally {
                     // Restore console.error. Otherwise other tests will fail
                     // with "TypeError: Attempted to wrap error which is already
@@ -219,7 +220,7 @@ describe("OverlayToaster", () => {
                 toaster.show({ message: "two" });
                 toaster.show({ message: "three" });
                 toaster.show({ message: "oh no" });
-                assert.lengthOf(toaster.getToasts(), 3, "expected 3 toasts");
+                expect(toaster.getToasts().length).toBe(3);
             });
         });
 
@@ -235,14 +236,14 @@ describe("OverlayToaster", () => {
                 document.documentElement.removeChild(testsContainerElement);
             });
 
-            it("focuses inside toast container", done => {
+            it("focuses inside toast container", async () => {
                 toaster.show({ message: "focus near me" });
+                
                 // small explicit timeout reduces flakiness of these tests
-                setTimeout(() => {
+                await waitFor(() => {
                     const toastElement = testsContainerElement.querySelector(`.${Classes.TOAST_CONTAINER}`);
-                    assert.isTrue(toastElement?.contains(document.activeElement));
-                    done();
-                }, 100);
+                    expect(toastElement?.contains(document.activeElement)).toBe(true);
+                }, { timeout: 200 });
             });
         });
 
@@ -258,13 +259,14 @@ describe("OverlayToaster", () => {
                     try {
                         spec.create({}, testsContainerElement);
                     } catch (err: any) {
-                        assert.equal(err.message, TOASTER_CREATE_NULL);
+                        expect(err.message).toBe(TOASTER_CREATE_NULL);
                     } finally {
                         spec.cleanup(testsContainerElement);
                     }
                 }
             }
-            mount(React.createElement(LifecycleToaster));
+            
+            render(<LifecycleToaster />);
         });
     });
 
