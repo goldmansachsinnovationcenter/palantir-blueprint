@@ -6,7 +6,7 @@
 - [x] packages/core/test/breadcrumbs/breadcrumbsTests.tsx
 - [x] packages/core/test/control-card/controlCardTests.tsx
 - [x] packages/core/test/toast/overlayToasterTests.tsx
-- [ ] packages/core/test/overlay2/overlay2Tests.tsx
+- [x] packages/core/test/overlay2/overlay2Tests.tsx
 - [ ] packages/core/test/tree/treeTests.tsx
 - [ ] packages/core/test/popover/popoverTests.tsx
 - [ ] packages/core/test/toast/toast2Tests.tsx
