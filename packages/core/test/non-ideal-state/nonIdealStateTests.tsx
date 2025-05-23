@@ -15,14 +15,15 @@
  */
 
 import { assert } from "chai";
-import { shallow } from "enzyme";
 import * as React from "react";
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
 
 import { Classes, H4, NonIdealState } from "../../src";
 
 describe("<NonIdealState>", () => {
     it("renders its contents", () => {
-        const wrapper = shallow(
+        render(
             <NonIdealState
                 action={<p>More text!</p>}
                 description="An error occurred."
@@ -30,21 +31,31 @@ describe("<NonIdealState>", () => {
                 icon="folder-close"
             />,
         );
-        assert.exists(wrapper.find(H4), "missing H4");
-        [Classes.NON_IDEAL_STATE_VISUAL, Classes.ICON_MUTED, Classes.NON_IDEAL_STATE].forEach(className => {
-            assert.exists(wrapper.find(`.${className}`), `missing ${className}`);
-        });
+        
+        expect(screen.getByText("ERROR")).toBeInTheDocument();
+        
+        const nonIdealStateElement = screen.getByText("ERROR").closest(`.${Classes.NON_IDEAL_STATE}`);
+        expect(nonIdealStateElement).toBeInTheDocument();
+        
+        expect(document.querySelector(`.${Classes.NON_IDEAL_STATE_VISUAL}`)).toBeInTheDocument();
+        expect(document.querySelector(`.${Classes.ICON_MUTED}`)).toBeInTheDocument();
+        
+        expect(screen.getByText("An error occurred.")).toBeInTheDocument();
+        expect(screen.getByText("More text!")).toBeInTheDocument();
     });
 
     it("does not apply icon muted style", () => {
-        const wrapper = shallow(<NonIdealState title="ERROR" icon="folder-close" iconMuted={false} />);
-        assert.isFalse(wrapper.find(`.${Classes.ICON_MUTED}`).exists(), `unexpected ${Classes.ICON_MUTED}`);
+        render(<NonIdealState title="ERROR" icon="folder-close" iconMuted={false} />);
+        expect(document.querySelector(`.${Classes.ICON_MUTED}`)).not.toBeInTheDocument();
     });
 
     it("ensures description is wrapped in an element", () => {
-        const wrapper = shallow(<NonIdealState action={<strong />} description="foo" />);
-        const div = wrapper.find(`.${Classes.NON_IDEAL_STATE_TEXT}`).children().find("div");
-        assert.lengthOf(div, 1);
-        assert.strictEqual(div.text(), "foo");
+        render(<NonIdealState action={<strong />} description="foo" />);
+        const textContainer = document.querySelector(`.${Classes.NON_IDEAL_STATE_TEXT}`);
+        expect(textContainer).toBeInTheDocument();
+        
+        const descriptionDiv = textContainer?.querySelector("div");
+        expect(descriptionDiv).toBeInTheDocument();
+        expect(descriptionDiv).toHaveTextContent("foo");
     });
 });

@@ -1,0 +1,113 @@
+# Enzyme to React Testing Library Migration Todo List
+
+## Core Package
+- [x] packages/core/test/non-ideal-state/nonIdealStateTests.tsx
+- [ ] packages/core/test/breadcrumbs/breadcrumbTests.tsx
+- [ ] packages/core/test/breadcrumbs/breadcrumbsTests.tsx
+- [ ] packages/core/test/control-card/controlCardTests.tsx
+- [ ] packages/core/test/toast/overlayToasterTests.tsx
+- [ ] packages/core/test/overlay2/overlay2Tests.tsx
+- [ ] packages/core/test/tree/treeTests.tsx
+- [ ] packages/core/test/popover/popoverTests.tsx
+- [ ] packages/core/test/toast/toast2Tests.tsx
+- [ ] packages/core/test/overflow-list/overflowListTests.tsx
+- [ ] packages/core/test/html-select/htmlSelectTests.tsx
+- [ ] packages/core/test/toast/toastTests.tsx
+- [ ] packages/core/test/tooltip/tooltipTests.tsx
+- [ ] packages/core/test/dialog/dialogTests.tsx
+- [ ] packages/core/test/card-list/cardListTests.tsx
+- [ ] packages/core/test/html/htmlTests.tsx
+- [ ] packages/core/test/tag-input/tagInputTests.tsx
+- [ ] packages/core/test/utils.ts
+- [ ] packages/core/test/icon/iconTests.tsx
+- [ ] packages/core/test/slider/rangeSliderTests.tsx
+- [ ] packages/core/test/slider/handleTests.tsx
+- [ ] packages/core/test/slider/multiSliderTests.tsx
+- [ ] packages/core/test/slider/sliderTestUtils.ts
+- [ ] packages/core/test/context-menu/contextMenuTests.tsx
+- [ ] packages/core/test/callout/calloutTests.tsx
+- [ ] packages/core/test/controls/inputGroupTests.tsx
+- [ ] packages/core/test/alert/alertTests.tsx
+- [ ] packages/core/test/card/cardTests.tsx
+- [ ] packages/core/test/controls/radioGroupTests.tsx
+- [ ] packages/core/test/progress/progressBarTests.tsx
+- [ ] packages/core/test/menu/menuTests.tsx
+- [ ] packages/core/test/menu/menuItemTests.tsx
+- [ ] packages/core/test/forms/formGroupTests.tsx
+- [ ] packages/core/test/forms/fileInputTests.tsx
+- [ ] packages/core/test/resize-sensor/resizeSensorTests.tsx
+- [ ] packages/core/test/forms/asyncControllableInputTests.tsx
+- [ ] packages/core/test/slider/sliderTests.tsx
+- [ ] packages/core/test/controls/controlsTests.tsx
+- [ ] packages/core/test/forms/textAreaTests.tsx
+- [ ] packages/core/test/section/sectionTests.tsx
+- [ ] packages/core/test/drawer/drawerTests.tsx
+- [ ] packages/core/test/panel-stack/panelStackTests.tsx
+- [ ] packages/core/test/multistep-dialog/multistepDialogTests.tsx
+- [ ] packages/core/test/tag/tagTests.tsx
+- [ ] packages/core/test/tag/compoundTagTests.tsx
+- [ ] packages/core/test/segmented-control/segmentedControlTests.tsx
+- [ ] packages/core/test/panel-stack2/panelStack2Tests.tsx
+- [ ] packages/core/test/overlay/overlayTests.tsx
+- [ ] packages/core/test/entity-title/entityTitleTests.tsx
+- [ ] packages/core/test/editable-text/editableTextTests.tsx
+- [ ] packages/core/test/portal/portalTests.tsx
+- [ ] packages/core/test/collapse/collapseTests.tsx
+- [ ] packages/core/test/spinner/spinnerTests.tsx
+- [ ] packages/core/test/buttons/abstractButtonTests.tsx
+- [ ] packages/core/test/text/textTests.tsx
+- [ ] packages/core/test/tabs/tabsTests.tsx
+- [ ] packages/core/test/buttons/buttonTests.tsx
+
+## Select Package
+- [ ] packages/select/test/itemRendererTests.tsx
+- [ ] packages/select/test/selectPopoverTestSuite.tsx
+- [ ] packages/select/test/selectTests.tsx
+- [ ] packages/select/test/omnibarTests.tsx
+- [ ] packages/select/test/queryListTests.tsx
+- [ ] packages/select/test/multiSelectTests.tsx
+- [ ] packages/select/test/selectComponentSuite.tsx
+- [ ] packages/select/test/suggestTests.tsx
+
+## Datetime2 Package
+- [ ] packages/datetime2/test/dateInput2MigrationUtilsTests.tsx
+- [ ] packages/datetime2/test/components/dateInput3Tests.tsx
+- [ ] packages/datetime2/test/components/datePicker3Tests.tsx
+- [ ] packages/datetime2/test/components/dateRangePicker3Tests.tsx
+- [ ] packages/datetime2/test/common/dayPickerTestUtils.ts
+- [ ] packages/datetime2/test/components/dateRangeInput3Tests.tsx
+
+## Table Package
+- [ ] packages/table/test/resizableTests.tsx
+- [ ] packages/table/test/tableBody2Tests.tsx
+- [ ] packages/table/test/editableCell2Tests.tsx
+- [ ] packages/table/test/quadrants/tableQuadrantTests.tsx
+- [ ] packages/table/test/quadrants/tableQuadrantStackTests.tsx
+- [ ] packages/table/test/table2Tests.tsx
+- [ ] packages/table/test/editableNameTests.tsx
+- [ ] packages/table/test/editableCellTests.tsx
+- [ ] packages/table/test/tableTests.tsx
+- [ ] packages/table/test/rowHeaderCellTests.tsx
+- [ ] packages/table/test/columnHeaderCellTests.tsx
+- [ ] packages/table/test/tableBodyTests.tsx
+
+## Datetime Package
+- [ ] packages/datetime/test/components/datePickerCaptionTests.tsx
+- [ ] packages/datetime/test/components/timePickerTests.tsx
+- [ ] packages/datetime/test/components/datePickerTests.tsx
+- [ ] packages/datetime/test/common/dayPickerTestUtils.ts
+- [ ] packages/datetime/test/components/dateRangePickerTests.tsx
+- [ ] packages/datetime/test/components/dateInputTests.tsx
+- [ ] packages/datetime/test/components/dateRangeInputTests.tsx
+- [ ] packages/datetime/test/components/timezoneSelectTests.tsx
+
+## Icons Package
+- [ ] packages/icons/test/generatedIconsTests.tsx
+- [ ] packages/icons/test/svgIconContainerTests.tsx
+
+## Test Commons
+- [ ] packages/test-commons/src/generateIsomorphicTests.ts
+- [ ] packages/test-commons/bootstrap.mjs
+
+## Documentation
+- [ ] packages/core/src/components/popover/popover.md

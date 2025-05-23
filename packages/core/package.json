@@ -74,6 +74,7 @@
         "@blueprintjs/karma-build-scripts": "workspace:^",
         "@blueprintjs/node-build-scripts": "workspace:^",
         "@blueprintjs/test-commons": "workspace:^",
+        "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/react": "^12.1.5",
         "@types/chai": "~4.3.11",
         "@types/enzyme": "~3.10.18",
